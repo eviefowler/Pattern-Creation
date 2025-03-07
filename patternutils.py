@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from collections import Counter
 from matplotlib import pyplot as plt
+from pandas import read_csv
 
 def read_image(image_path):
     """ Load a saved image from the specified path """
@@ -110,3 +111,12 @@ def reduce_colors(image, color_target = 10, attempts = 1):
     newImage = newImageFlat.reshape((image.shape))
     
     return(newImage)
+
+# load RGB-DMC floss number crosswalk
+flossWalk = read_csv('dmcRGB.txt', delimiter = ',')
+flossWalk['RGB String'] = flossWalk.apply(lambda x: f"{str(x['Red'])}.{str(x['Green'])}.{str(x['Blue'])}", axis = 1)
+flossWalk = (flossWalk
+             .rename(columns = {'Floss#': 'DMC Number', 'RGB code': 'Hex Code'})
+             .set_index('RGB String')
+             .drop(columns = ['Row', 'Hex Code'])
+            )
