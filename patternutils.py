@@ -156,6 +156,32 @@ def convert_to_dmc(image):
     
     return(image)
 
+def replace_color(image, target, replacement, mode = 'RGB string'):
+    """ A targeted replacer for undesired floss colors """
+    
+    try:
+        assert mode in ['RGB string', 'DMC number']
+    except:
+        print('invalid mode')
+        return(image)
+    
+    # if user passes DMC numbers, convert to rgb
+    if mode == 'DMC number':
+        try:
+            target = flossWalk.loc[flossWalk['DMC Number'] == target].index[0]
+            replacement = flossWalk.loc[flossWalk['DMC Number'] == replacement].index[0]
+        except:
+            print('invalid target or replacement')
+            return(image)
+    
+    # replace colors, pixel by pixel
+    for row in range(image.shape[0]):
+        for col in range(image.shape[1]):
+            if pixlts(image[row, col, :]) == target:
+                image[row, col, :] = pixstl(replacement)
+    
+    return(image)
+
 # load RGB-DMC floss number crosswalk
 flossWalk = read_csv('dmcRGB.txt', delimiter = ',')
 flossWalk['RGB String'] = flossWalk.apply(lambda x: f"{str(x['Red'])}.{str(x['Green'])}.{str(x['Blue'])}", axis = 1)
