@@ -39,7 +39,7 @@ def show_image(image, as_pattern = False, save_path = False):
                 dmc = flossWalk.loc[clr, 'DMC Number']
                 desc = flossWalk.loc[clr, 'Description']
             except:
-                dmc = 0
+                dmc = clr
                 desc = 'not a DMC color'
             scld = [x / 255 for x in pixstl(clr)]
             lbl = f'{dmc} ({desc}); Stitch Count: {colorCounts[clr]}'
