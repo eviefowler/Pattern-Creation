@@ -1,3 +1,4 @@
+import copy
 import cv2
 import numpy as np
 from collections import Counter
@@ -181,6 +182,33 @@ def replace_color(image, target, replacement, mode = 'RGB string'):
                 image[row, col, :] = pixstl(replacement)
     
     return(image)
+
+def highlight_color(image, target, replacement = '0.0.0', mode = 'RGB string'):
+    """ Highlight where a particular color is used in a pattern """
+    
+    try:
+        assert mode in ['RGB string', 'DMC number']
+    except:
+        print('invalid mode')
+        return(image)
+    
+    # if user passes DMC numbers, convert to rgb
+    if mode == 'DMC number':
+        try:
+            target = flossWalk.loc[flossWalk['DMC Number'] == target].index[0]
+            replacement = flossWalk.loc[flossWalk['DMC Number'] == replacement].index[0]
+        except:
+            print('invalid target')
+            return(image)
+    
+    # replace colors, pixel by pixel
+    highlight = copy.deepcopy(image)
+    for row in range(highlight.shape[0]):
+        for col in range(highlight.shape[1]):
+            if pixlts(highlight[row, col, :]) != target:
+                highlight[row, col, :] = pixstl(replacement)
+    
+    return(highlight)
 
 # load RGB-DMC floss number crosswalk
 flossWalk = read_csv('dmcRGB.txt', delimiter = ',')
