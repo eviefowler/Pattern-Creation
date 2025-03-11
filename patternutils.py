@@ -75,12 +75,13 @@ def stitched_size(image, spi = 12, verbose = False):
 def resize_image(image, target):
     """ Resize an image"""
     
+    rs = copy.deepcopy(image)
     if isinstance(target, float):
         # scale in fixed proportion
-        newImage = cv2.resize(image, None, fx = target, fy = target)
+        newImage = cv2.resize(rs, None, fx = target, fy = target)
     elif isinstance(target, tuple):
         # meet specified size
-        newImage = cv2.resize(image, target)
+        newImage = cv2.resize(rs, target)
         
     return(newImage)
 
@@ -176,10 +177,11 @@ def replace_color(image, target, replacement, mode = 'RGB string'):
             return(image)
     
     # replace colors, pixel by pixel
-    for row in range(image.shape[0]):
-        for col in range(image.shape[1]):
-            if pixlts(image[row, col, :]) == target:
-                image[row, col, :] = pixstl(replacement)
+    rc = copy.deepcopy(image)
+    for row in range(rc.shape[0]):
+        for col in range(rc.shape[1]):
+            if pixlts(rc[row, col, :]) == target:
+                rc[row, col, :] = pixstl(replacement)
     
     return(image)
 
