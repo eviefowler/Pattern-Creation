@@ -121,6 +121,7 @@ def reduce_colors(image, color_target = 10, attempts = 1):
     # reshape image to one row per pixel
     pixels = image.reshape((image.shape[0] * image.shape[1], 3)).astype(np.float32)
 
+    cv2.setRNGSeed(412)
     compactness, labels, centers = cv2.kmeans(pixels
                                               , color_target
                                               , None
