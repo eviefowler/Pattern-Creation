@@ -153,11 +153,12 @@ def convert_to_dmc(image):
         colorMap[clr] = neighborColor.predict(np.array([pixstl(clr)]))[0]
     
     # replace colors, pixel by pixel
-    for row in range(image.shape[0]):
-        for col in range(image.shape[1]):
-            image[row, col, :] = np.array(pixstl(colorMap[pixlts(image[row, col, :])]))
+    dmc = copy.deepcopy(image)
+    for row in range(dmc.shape[0]):
+        for col in range(dmc.shape[1]):
+            dmc[row, col, :] = np.array(pixstl(colorMap[pixlts(dmc[row, col, :])]))
     
-    return(image)
+    return(dmc)
 
 def replace_color(image, target, replacement, mode = 'RGB string'):
     """ A targeted replacer for undesired floss colors """
@@ -184,7 +185,7 @@ def replace_color(image, target, replacement, mode = 'RGB string'):
             if pixlts(rc[row, col, :]) == target:
                 rc[row, col, :] = pixstl(replacement)
     
-    return(image)
+    return(rc)
 
 def highlight_color(image, target, replacement = '0.0.0', mode = 'RGB string'):
     """ Highlight where a particular color is used in a pattern """
